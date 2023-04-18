@@ -1,15 +1,33 @@
 ---
+import Mainlayout from "../layout/Mainlayout.astro";
+import Form from "../component/Form.astro";
+import Testimonial from "../component/Testimonial.astro";
+
+const url = "https://qiefxljtdomrvlcicryk.supabase.co/rest/v1/test_testimonials?approved=is.true";
+    const key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpZWZ4bGp0ZG9tcnZsY2ljcnlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODE4MDYxNTQsImV4cCI6MTk5NzM4MjE1NH0.elpWJkdD0Vyslv-rj7qKE-dTU0_2bnZU0GYVB58BQLo";
+
+const response = await fetch(url,{
+	method: "GET",
+	headers: {
+		apikey: key,
+		'Accept': 'application/json',
+		'Content-Type': 'application/json'
+	},
+
+});
+
+const udsagn = await response.json();
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Mainlayout title="Send til Database">
+	<main>
+		<Form />
+	  <ul>
+		{
+			udsagn.map((testimonial) => {
+				return <Testimonial name = {testimonial.name} text = {testimonial.text} dato = {testimonial.created_at.split("-").reverse().join("-")} />
+			})
+		}
+	</ul>
+	</main>
+</Mainlayout>
